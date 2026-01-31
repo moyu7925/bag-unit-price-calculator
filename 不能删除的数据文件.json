@@ -1,0 +1,53 @@
+{
+  "templates": {
+    "默认模板": {
+      "name": "默认模板",
+      "is_default": true,
+      "settings": {
+        "param_value": "0.95",
+        "material_price": "9",
+        "process_param": "0.2",
+        "print_param": "0.015",
+        "material_type": "铜板",
+        "material_type_price_copper": "100",
+        "material_type_price_rubber": "50",
+        "material_enabled": true,
+        "process_enabled": true,
+        "print_enabled": true
+      }
+    },
+    "1": {
+      "name": "1",
+      "is_default": false,
+      "settings": {
+        "param_value": "0.95",
+        "material_price": "9",
+        "process_param": "0.2",
+        "print_param": "0.015",
+        "material_type": "铜板",
+        "material_type_price_copper": "100",
+        "material_type_price_rubber": "50",
+        "material_enabled": true,
+        "process_enabled": true,
+        "print_enabled": true
+      }
+    },
+    "2": {
+      "name": "2",
+      "is_default": false,
+      "settings": {
+        "param_value": "0.95",
+        "material_price": "9",
+        "process_param": "0.2",
+        "print_param": "0.015",
+        "material_type": "铜板",
+        "material_type_price_copper": "100",
+        "material_type_price_rubber": "50",
+        "material_enabled": true,
+        "process_enabled": true,
+        "print_enabled": true
+      }
+    }
+  },
+  "last_used_template": "默认模板"
+}
