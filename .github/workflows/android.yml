@@ -60,7 +60,7 @@ jobs:
         export ANDROID_HOME=/home/runner/.buildozer/android/platform/android-sdk
         export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
         yes | sdkmanager --licenses
-        sdkmanager "platform-tools" "platforms;android-31" "build-tools;33.0.2"
+        sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
         
         # Verify and fix aidl
         if [ ! -f "$ANDROID_HOME/platform-tools/aidl" ]; then
@@ -88,7 +88,7 @@ jobs:
         cd /home/runner/work/bag-unit-price-calculator/bag-unit-price-calculator
         yes | buildozer android debug
       env:
-        BUILDZER_ANDROID_API: 31
+        BUILDZER_ANDROID_API: 33
         BUILDZER_ANDROID_NDK: 25b
         ANDROID_HOME: /home/runner/.buildozer/android/platform/android-sdk
         ANDROID_SDK_ROOT: /home/runner/.buildozer/android/platform/android-sdk
