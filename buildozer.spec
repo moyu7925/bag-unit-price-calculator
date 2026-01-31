@@ -23,7 +23,7 @@ android.minapi = 21
 
 android.api = 33
 
-android.ndk = 25b
+android.ndk = 23b
 
 android.sdk = 33
 
