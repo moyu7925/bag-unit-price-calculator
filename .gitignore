@@ -44,3 +44,7 @@ Thumbs.db
 
 # Kivy
 .kivy/
+
+# Build Monitor
+build_monitor.log
+*.log
