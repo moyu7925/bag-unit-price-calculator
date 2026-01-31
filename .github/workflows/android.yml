@@ -20,7 +20,7 @@ env:
   ANDROID_API: 33
   ANDROID_NDK: 25b
   BUILD_TIMEOUT: 3600
-  MAX_RETRIES: 2
+  MAX_RETRIES: 3
 
 jobs:
   build:
