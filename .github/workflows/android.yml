@@ -55,8 +55,25 @@ jobs:
         export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
         yes | sdkmanager --licenses
         sdkmanager "platform-tools" "platforms;android-31" "build-tools;33.0.2"
-        ls -la $ANDROID_HOME/build-tools/
-        ls -la $ANDROID_HOME/platform-tools/aidl
+        
+        # Verify and fix aidl
+        if [ ! -f "$ANDROID_HOME/platform-tools/aidl" ]; then
+          echo "aidl not found, downloading platform-tools separately..."
+          cd /tmp
+          wget -q https://dl.google.com/android/repository/platform-tools-latest-linux.zip -O platform-tools.zip
+          unzip -qo platform-tools.zip
+          cp -r platform-tools/* $ANDROID_HOME/platform-tools/
+        fi
+        
+        # Verify aidl exists
+        if [ -f "$ANDROID_HOME/platform-tools/aidl" ]; then
+          echo "✓ aidl found at $ANDROID_HOME/platform-tools/aidl"
+          $ANDROID_HOME/platform-tools/aidl --version
+        else
+          echo "✗ aidl still not found, listing available files:"
+          find $ANDROID_HOME -name "aidl" -type f 2>/dev/null
+          ls -la $ANDROID_HOME/platform-tools/
+        fi
     
     - name: Build APK
       run: |
