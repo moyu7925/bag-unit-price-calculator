@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>单价计算器 V4</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+        
+        .phone-container {
+            width: 100%;
+            max-width: 380px;
+            background: white;
+            border: 1px solid #ddd;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: #333;
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .template-bar {
+            background: #f0f0f0;
+            padding: 8px;
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .template-select {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+        }
+        
+        .manage-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .results-area {
+            flex: 0 0 40%;
+            padding: 12px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-label {
+            color: #666;
+        }
+        
+        .result-value {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .result-value.highlight {
+            color: #0066cc;
+            font-size: 16px;
+        }
+        
+        .input-area {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            background: #fafafa;
+        }
+        
+        .controls {
+            background: white;
+            padding: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            border: 1px solid #ddd;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .checkbox-group label {
+            font-size: 13px;
+            color: #333;
+        }
+        
+        .reset-btn {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .input-section {
+            background: white;
+            padding: 10px;
+            margin-bottom: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .section-title {
+            color: #333;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .input-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            gap: 8px;
+        }
+        
+        .input-row label {
+            width: 70px;
+            font-size: 13px;
+            color: #555;
+            flex-shrink: 0;
+        }
+        
+        .input-row input {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+        }
+        
+        .input-row select {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+        }
+        
+        @media (max-width: 480px) {
+            .phone-container {
+                border: none;
+                height: 100vh;
+                max-width: none;
+            }
+            
+            body {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="header">单价计算器 V4</div>
+        
+        <div class="template-bar">
+            <select class="template-select" id="templateSelect">
+                <option value="默认模板">默认模板</option>
+            </select>
+            <button class="manage-btn" onclick="alert('模板管理功能')">管理</button>
+        </div>
+        
+        <div class="results-area">
+            <div class="result-item">
+                <span class="result-label">原料单价：</span>
+                <span class="result-value" id="materialUnitPrice">0.000 元</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">加工单价：</span>
+                <span class="result-value" id="processUnitPrice">0.000 元</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">印刷单价：</span>
+                <span class="result-value" id="printUnitPrice">0.000 元</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">单袋单价：</span>
+                <span class="result-value highlight" id="bagUnitPrice">0.000 元</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">原料重量：</span>
+                <span class="result-value" id="materialWeight">0.000 kg</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">总费用：</span>
+                <span class="result-value" id="totalFee">0.000 元</span>
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <div class="controls">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="materialCheckbox" checked onchange="calculate()">
+                    <label for="materialCheckbox">原料</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="processCheckbox" checked onchange="calculate()">
+                    <label for="processCheckbox">加工</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="printCheckbox" checked onchange="calculate()">
+                    <label for="printCheckbox">印刷</label>
+                </div>
+                <button class="reset-btn" onclick="resetFields()">重置</button>
+            </div>
+            
+            <div class="input-section">
+                <div class="section-title">原料计算</div>
+                <div class="input-row">
+                    <label>开口(cm)</label>
+                    <input type="number" id="opening" placeholder="输入开口" oninput="calculate()">
+                </div>
+                <div class="input-row">
+                    <label>宽度(cm)</label>
+                    <input type="number" id="width" placeholder="输入宽度" oninput="calculate()">
+                </div>
+                <div class="input-row">
+                    <label>厚度/C</label>
+                    <input type="number" id="thickness" placeholder="输入厚度" oninput="calculate()">
+                </div>
+                <div class="input-row">
+                    <label>参数值</label>
+                    <input type="number" id="paramValue" value="0.95" step="0.01" oninput="calculate()">
+                </div>
+                <div class="input-row">
+                    <label>原料价格</label>
+                    <input type="number" id="materialPrice" value="9" step="0.1" oninput="calculate()">
+                </div>
+            </div>
+            
+            <div class="input-section">
+                <div class="section-title">加工计算</div>
+                <div class="input-row">
+                    <label>个数</label>
+                    <input type="number" id="quantity" placeholder="输入个数" oninput="calculate()">
+                </div>
+                <div class="input-row">
+                    <label>工费参数</label>
+                    <input type="number" id="processParam" value="0.2" step="0.01" oninput="calculate()">
+                </div>
+            </div>
+            
+            <div class="input-section">
+                <div class="section-title">印刷计算</div>
+                <div class="input-row">
+                    <label>工费参数</label>
+                    <input type="number" id="printParam" value="0.015" step="0.001" oninput="calculate()">
+                </div>
+                <div class="input-row">
+                    <label>版材类型</label>
+                    <select id="materialType" onchange="calculate()">
+                        <option value="铜板">铜板</option>
+                        <option value="胶版">胶版</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function calculate() {
+            const materialEnabled = document.getElementById('materialCheckbox').checked;
+            const processEnabled = document.getElementById('processCheckbox').checked;
+            const printEnabled = document.getElementById('printCheckbox').checked;
+            
+            const opening = parseFloat(document.getElementById('opening').value) || 0;
+            const width = parseFloat(document.getElementById('width').value) || 0;
+            const thickness = parseFloat(document.getElementById('thickness').value) || 0;
+            const paramValue = parseFloat(document.getElementById('paramValue').value) || 0.95;
+            const materialPrice = parseFloat(document.getElementById('materialPrice').value) || 9;
+            const quantity = parseFloat(document.getElementById('quantity').value) || 0;
+            const processParam = parseFloat(document.getElementById('processParam').value) || 0.2;
+            const printParam = parseFloat(document.getElementById('printParam').value) || 0.015;
+            const materialType = document.getElementById('materialType').value;
+            
+            let materialUnitPrice = 0;
+            let materialWeight = 0;
+            let processUnitPrice = 0;
+            let processFee = 0;
+            let printUnitPrice = 0;
+            let printFee = 0;
+            let materialTypePrice = materialType === '铜板' ? 100 : 50;
+            
+            if (materialEnabled) {
+                materialUnitPrice = (opening / 100) * (width / 100) * (thickness * 2 / 100) * paramValue * materialPrice;
+                materialWeight = (opening / 100) * (width / 100) * (thickness * 2 / 100) * paramValue * quantity;
+            }
+            
+            if (processEnabled) {
+                processUnitPrice = (opening / 100) * processParam;
+                processFee = processUnitPrice * quantity;
+                if (processFee < 100) {
+                    processFee = 100;
+                    processUnitPrice = quantity > 0 ? 100 / quantity : 0;
+                }
+            }
+            
+            if (printEnabled) {
+                printUnitPrice = printParam;
+                printFee = printUnitPrice * quantity;
+                if (printFee < materialTypePrice) {
+                    printFee = materialTypePrice;
+                    printUnitPrice = quantity > 0 ? materialTypePrice / quantity : 0;
+                }
+            }
+            
+            const bagUnitPrice = materialUnitPrice + processUnitPrice + printUnitPrice;
+            const totalFee = materialUnitPrice * quantity + processFee + printFee;
+            
+            document.getElementById('materialUnitPrice').textContent = materialUnitPrice.toFixed(3) + ' 元';
+            document.getElementById('materialWeight').textContent = materialWeight.toFixed(3) + ' kg';
+            document.getElementById('processUnitPrice').textContent = processUnitPrice.toFixed(3) + ' 元';
+            document.getElementById('printUnitPrice').textContent = printUnitPrice.toFixed(3) + ' 元';
+            document.getElementById('bagUnitPrice').textContent = bagUnitPrice.toFixed(3) + ' 元';
+            document.getElementById('totalFee').textContent = totalFee.toFixed(3) + ' 元';
+        }
+        
+        function resetFields() {
+            document.getElementById('opening').value = '';
+            document.getElementById('width').value = '';
+            document.getElementById('thickness').value = '';
+            document.getElementById('quantity').value = '';
+            document.getElementById('paramValue').value = '0.95';
+            document.getElementById('materialPrice').value = '9';
+            document.getElementById('processParam').value = '0.2';
+            document.getElementById('printParam').value = '0.015';
+            document.getElementById('materialType').value = '铜板';
+            calculate();
+        }
+        
+        calculate();
+    </script>
+</body>
+</html>
