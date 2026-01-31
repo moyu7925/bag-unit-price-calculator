@@ -23,7 +23,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y python3-pip build-essential git libffi-dev libssl-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libavformat-dev libswscale-dev
-        pip install buildozer
+        pip install cython buildozer
     
     - name: Build APK
       run: |
