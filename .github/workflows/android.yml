@@ -48,6 +48,12 @@ jobs:
         mkdir -p /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools
         mv cmdline-tools /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/latest
         ls -la /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/
+        
+        # Create symbolic link for sdkmanager path that buildozer expects
+        mkdir -p /home/runner/.buildozer/android/platform/android-sdk/tools/bin
+        ln -sf /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
+        ln -sf /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/aidl /home/runner/.buildozer/android/platform/android-sdk/tools/bin/aidl
+        ls -la /home/runner/.buildozer/android/platform/android-sdk/tools/bin/
     
     - name: Install Android SDK components
       run: |
