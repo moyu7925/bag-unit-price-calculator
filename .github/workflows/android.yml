@@ -1,0 +1,127 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  ANDROID_API: 33
+  ANDROID_NDK: 25b
+  BUILD_TIMEOUT: 3600
+  MAX_RETRIES: 3
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        cache: 'pip'
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          git \
+          python3 \
+          python3-dev \
+          openjdk-17-jdk \
+          autoconf \
+          libtool \
+          pkg-config \
+          zlib1g-dev \
+          libncurses5-dev \
+          libncursesw5-dev \
+          libtinfo5 \
+          cmake \
+          libffi-dev \
+          libssl-dev \
+          libsdl2-dev \
+          libsdl2-image-dev \
+          libsdl2-mixer-dev \
+          libsdl2-ttf-dev \
+          libportmidi-dev \
+          libavformat-dev \
+          libswscale-dev
+    
+    - name: Install Python dependencies
+      run: |
+        pip install --upgrade pip
+        pip install buildozer cython
+    
+    - name: Cache Buildozer dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.buildozer
+          buildozer
+        key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
+        restore-keys: |
+          ${{ runner.os }}-buildozer-
+    
+    - name: Display Buildozer info
+      run: |
+        buildozer --version
+        cat buildozer.spec
+    
+    - name: Build APK with retry
+      run: |
+        export ANDROID_HOME=/home/runner/.buildozer/android/platform/android-sdk
+        export ANDROID_SDK_ROOT=$ANDROID_HOME
+        export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
+        
+        echo "=== Starting Buildozer build ==="
+        
+        for attempt in $(seq 1 ${{ env.MAX_RETRIES }}); do
+          echo "Attempt $attempt of ${{ env.MAX_RETRIES }}"
+          
+          if yes | buildozer android debug; then
+            echo "✓ Build successful!"
+            exit 0
+          else
+            echo "✗ Build failed on attempt $attempt"
+            
+            if [ $attempt -lt ${{ env.MAX_RETRIES }} ]; then
+              echo "Cleaning and retrying..."
+              buildozer android clean
+              sleep 10
+            else
+              echo "Max retries reached"
+              exit 1
+            fi
+          fi
+        done
+      timeout-minutes: 60
+    
+    - name: Verify APK
+      run: |
+        if [ -f bin/*.apk ]; then
+          echo "✓ APK file found:"
+          ls -lh bin/*.apk
+        else
+          echo "✗ APK file not found!"
+          exit 1
+        fi
+    
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-debug
+        path: bin/*.apk
+        retention-days: 30
+    
+    - name: Build summary
+      run: |
+        echo "### Build Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "- **Status**: Success" >> $GITHUB_STEP_SUMMARY
+        echo "- **APK File**: $(ls bin/*.apk)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Size**: $(du -h bin/*.apk | cut -f1)" >> $GITHUB_STEP_SUMMARY
