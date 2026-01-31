@@ -28,7 +28,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y python3-pip build-essential git libffi-dev libssl-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libavformat-dev libswscale-dev autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo-dev cmake libffi-dev libssl-dev openjdk-17-jdk
+        sudo apt-get install -y python3-pip build-essential git libffi-dev libssl-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libavformat-dev libswscale-dev autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo-dev cmake libffi-dev libssl-dev openjdk-17-jdk unzip
         pip install cython buildozer
     
     - name: Build APK
@@ -37,6 +37,8 @@ jobs:
       env:
         BUILDZER_ANDROID_API: 31
         BUILDZER_ANDROID_NDK: 25b
+        ANDROID_HOME: /home/runner/.buildozer/android/platform/android-sdk
+        ANDROID_SDK_ROOT: /home/runner/.buildozer/android/platform/android-sdk
     
     - name: Upload APK
       uses: actions/upload-artifact@v4
