@@ -43,7 +43,6 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-        cache: 'gradle'
 
     - name: Cache Buildozer dependencies
       id: cache-buildozer
