@@ -60,9 +60,11 @@ jobs:
         if [ ! -f "$ANDROID_HOME/platform-tools/aidl" ]; then
           echo "aidl not found, downloading platform-tools separately..."
           cd /tmp
+          rm -rf platform-tools platform-tools.zip
           wget -q https://dl.google.com/android/repository/platform-tools-latest-linux.zip -O platform-tools.zip
           unzip -qo platform-tools.zip
-          cp -r platform-tools/* $ANDROID_HOME/platform-tools/
+          mkdir -p $ANDROID_HOME/platform-tools
+          cp -rf platform-tools/* $ANDROID_HOME/platform-tools/
         fi
         
         # Verify aidl exists
@@ -70,9 +72,9 @@ jobs:
           echo "✓ aidl found at $ANDROID_HOME/platform-tools/aidl"
           $ANDROID_HOME/platform-tools/aidl --version
         else
-          echo "✗ aidl still not found, listing available files:"
-          find $ANDROID_HOME -name "aidl" -type f 2>/dev/null
-          ls -la $ANDROID_HOME/platform-tools/
+          echo "✗ aidl still not found, trying alternative location..."
+          find $ANDROID_HOME -name "aidl" -type f 2>/dev/null | head -5
+          ls -la $ANDROID_HOME/build-tools/33.0.2/ 2>/dev/null | grep -i aidl
         fi
     
     - name: Build APK
