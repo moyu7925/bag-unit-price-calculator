@@ -8,8 +8,8 @@ on:
 env:
   ANDROID_API: 33
   ANDROID_NDK: 25b
-  BUILD_TIMEOUT: 3600
-  MAX_RETRIES: 3
+  BUILD_TIMEOUT: 7200
+  MAX_RETRIES: 2
 
 jobs:
   build:
